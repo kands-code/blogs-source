@@ -1,105 +1,83 @@
+"leader
 let mapleader=" "
 
-" line number
-" ====
+"number
 set number
 set relativenumber
 set cursorline
 
-" syntax
-" ====
+"syntax
 syntax on
 filetype on
 filetype indent on
 filetype plugin on
 filetype plugin indent on
-inoremap ( ()<ESC>i
-inoremap [ []<ESC>i
-inoremap { {}<ESC>i
-inoremap ' ''<ESC>i
-inoremap " ""<ESC>i
-""if  filetype == "R"
-    ""inoremap < <- <ESC>i
-    ""inoremap > -> <ESC>i
-""endif
-
-" indent
-" ====
 set autoindent
 set cindent
 
-" tabkey
-" ====
+set wrap
+
+"tabkey
 set tabstop=4
 set shiftwidth=4
 set expandtab
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
 
-" appearance
-" ====
+"autocompletion
+inoremap ( ()<ESC>i
+inoremap [ []<ESC>i
+inoremap { {}<ESC>i
+inoremap ' ''<ESC>i
+inoremap " ""<ESC>i
+
+"appearance
 let &t_ut=''
 set laststatus=2
 
-" wrap
-" ====
-set wrap
-
-" editor
-" ====
+"editor
 set showcmd
 set wildmenu
-" s split 
-" r right 
-" l left 
-" u up
-" d down
 map sr :set splitright<CR>:vsplit<CR>
 map sl :set nosplitright<CR>:vsplit<CR>
 map sd :set splitbelow<CR>:split<CR>
 map su :set nosplitbelow<CR>:split<CR>
-" change screen
+
+map <LEADER>r <C-w>l
 map <LEADER>l <C-w>h
-map <LEADER>r <C-w>r
-map <LEADER>u <C-w>k
 map <LEADER>d <C-w>j
-" screen size
+map <LEADER>u <C-w>k
+
 map <LEADER><up> :res +5<CR>
 map <LEADER><down> :res -5<CR>
-map <LEADER><left> :vertical resize -5<CR>
 map <LEADER><right> :vertical resize +5<CR>
-" 's' by default is used to delete current character and into the insert mode
-" but I DONOT need it, so I remapped it
+map <LEADER><left> :vertical resize -5<CR>
+
 map s <nop>
 map S :w<CR>
-" tab page
+
+"tab page
 map tn :tabe<CR>
-map tl :+tabnext<CR>
-map tr :-tabnext<CR>
+map tr :+tabnext<CR>
+map tl :-tabnext<CR>
 map tc :tabclose<CR>
 
-" open file
+"keep trace
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-" backspace
 set backspace=indent,eol,start
 
-" execute dir
 set autochdir
+" close mouse mode to enable clipboard
+set mouse=
 
-" mouse
-set mouse=a
-
-" backup
-" ====
+"backup
 set nobackup
 set nowritebackup
 
-" encoding
-" ====
+"encoding
 set encoding=utf-8
 
-" search
-" ====
+"search
 set hlsearch
 exec "nohlsearch"
 set incsearch
@@ -107,45 +85,68 @@ set ignorecase
 set smartcase
 noremap <LEADER><CR> :nohlsearch<CR>
 
-" Plugins
-" ====
-call plug#begin('~/.config/nvim/plugged')
+"""""""""
+"""""
+""   Plugins
+"""""
+"""""""""
+
+call plug#begin('~/.local/share/nvim/site/plugged')
 
 Plug 'vim-airline/vim-airline'
-
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
-" Coc
-" ====
+""  ____           
+"" / ___|___   ___ 
+""| |   / _ \ / __|
+""| |__| (_) | (__ 
+"" \____\___/ \___|
+""                 
+
 let g:coc_global_extensions = [
     \'coc-json',
-    \'coc-clangd',
-    \'coc-css',
-    \'coc-go',
-    \'coc-julia',
-    \'coc-rust-analyzer',
-    \'coc-r-lsp',
-    \'coc-python',
-    \'coc-cmake',
-    \'coc-emmet',
+    \'coc-html',
     \'coc-vimlsp',
-    \'coc-tsserver',
     \'coc-xml',
+    \'coc-syntax',
+    \'coc-css',
+    \'coc-clangd',
     \'coc-toml',
-    \'coc-highlight',
     \'coc-yaml',
-    \'coc-phpls'
+    \'coc-sql',
+    \'coc-texlab',
+    \'coc-sh',
+    \'coc-r-lsp',
+    \'coc-rust-analyzer',
+    \'coc-pyright',
+    \'coc-julia',
+    \'coc-go',
+    \'coc-emmet',
+    \'coc-lsp-wl',
+    \'coc-svg',
+    \'coc-tsserver'
 \]
 
-set updatetime=250
+"" coc-css
+autocmd FileType scss setl iskeyword+=@-@
+
+"" coc-vimlsp
+let g:markdown_fenced_languages = [
+    \'vim',
+    \'help'
+\]
+
+"" nvim.coc
+set hidden
+set updatetime=100
 set shortmess+=c
 
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -153,12 +154,34 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-inoremap <silent><expr> <C-o> coc#refresh()
+inoremap <silent><expr> <c-o> coc#refresh()
 
-inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+noremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : 
+    \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+nmap <silent> <LEADER>- <Plug>(coc-diagnostic-prev)
+nmap <silent> <LEADER>+ <Plug>(coc-diagnostic-next)
+
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+nnoremap <silent> <LEADER>h :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+nmap <leader>rn <Plug>(coc-rename)
+
+"" mma
+autocmd BufNewFile,BufRead *.wl setfiletype mma
+autocmd BufNewFile,BufRead *.wls setfiletype mma
+autocmd BufNewFile,BufRead *.mma setfiletype mma

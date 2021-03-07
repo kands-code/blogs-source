@@ -2,10 +2,25 @@
     "coc.preferences.extensionUpdateCheck": "daily",
     "suggest.noselect": true,
     "suggest.enablePreselect": false,
-    "codeLens.enable": true,
     "coc.preferences.formatOnSaveFiletypes": [
         "json",
+        "xml",
+        "html",
+        "css",
+        "js",
+        "latex",
         "python"
     ],
-    "diagnostic.refreshOnInsertMode": false
+    "lsp-wl.enable": true,
+    "lsp-wl.wolframExecutablePath": "/opt/Mathematica/Executables/wolfram",
+    "lsp-wl.wolframLanguageServerPath": "/home/kands/.local/bin/lsp-wl",
+    "go.checkForUpdates": "disabled",
+    "xml.java.home": "/usr/lib/jvm/java-15-openjdk/",
+    "texlab.path": "/usr/bin/texlab",
+    "latex.build.executable": "/usr/bin/xelatex",
+    "latex.build.onSave": true,
+    "go.goplsPath": "/usr/bin/gopls",
+    "rust-analyzer.enable": true,
+    "rust-analyzer.server.path": "/usr/bin/rust-analyzer",
+    "python.linting.pylintEnabled": true
 }
